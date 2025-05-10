@@ -135,6 +135,7 @@ class SlidingPuzzle(val size: Int) {
             }
             println()
         }
+        println("-----------")
     }
 
     /**
