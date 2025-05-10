@@ -67,3 +67,18 @@ fun makeAStarQueue(heuristic: (SlidingPuzzle) -> Int): (
         addAll(updated)
     }
 }
+
+fun printSolution(goalNode: Node) {
+    println("Solution found in ${goalNode.depth} steps.")
+    val path = mutableListOf<Node>()
+    var current: Node? = goalNode
+    while (current != null) {
+        path.add(current)
+        current = current.parent
+    }
+    path.reversed().forEach { node ->
+        node.action?.let { println("Move: $it") }
+        node.state.print()
+    }
+}
+
