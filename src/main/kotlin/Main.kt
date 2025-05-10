@@ -1,5 +1,7 @@
 package org.example
 
+import kotlin.system.measureTimeMillis
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
@@ -10,12 +12,18 @@ fun main() {
     puzzle.print()
 
     val heuristic = { p: SlidingPuzzle -> p.manhattan() }
-    val goalNode = search(puzzle, makeAStarQueue(heuristic))
+
+    var goalNode: Node?
+    val timeTaken = measureTimeMillis {
+        goalNode = search(puzzle, makeAStarQueue(heuristic))
+    }
+
+    println("Time: $timeTaken ms")
 
     if (goalNode == null) {
         println("No solution found.")
     } else {
-        printSolution(goalNode)
+        printSolution(goalNode!!)
     }
 }
 
