@@ -6,24 +6,46 @@ import kotlin.system.measureTimeMillis
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
     val puzzle = SlidingPuzzle(size = 3)
-    puzzle.scramble(steps = 20)
+    puzzle.scramble(steps = 30)
 
     println("Initial puzzle:")
     puzzle.print()
 
-    val heuristic = { p: SlidingPuzzle -> p.manhattan() }
+    val heuristicForMahattan = { p: SlidingPuzzle -> p.manhattan() }
+    val heuristicForMisplaced = { p: SlidingPuzzle -> p.misplaced() }
 
-    var goalNode: Node?
-    val timeTaken = measureTimeMillis {
-        goalNode = search(puzzle, makeAStarQueue(heuristic))
+    runSearch("A* Search (Manhattan)", puzzle) {
+        search(puzzle, makeAStarQueue(heuristicForMahattan))
     }
 
-    println("Time: $timeTaken ms")
+    runSearch("A* Search (Misplaced Tiles)", puzzle) {
+        search(puzzle, makeAStarQueue(heuristicForMisplaced))
+    }
 
-    if (goalNode == null) {
-        println("No solution found.")
+    runSearch("Uniform Cost Search", puzzle) {
+        search(puzzle, ::uniformCostQueue)
+    }
+
+}
+
+fun runSearch(
+    name: String,
+    puzzle: SlidingPuzzle,
+    searchFn: () -> Node?
+) {
+    println("Running $name")
+    var result: Node? = null
+    val time = measureTimeMillis {
+        result = searchFn()
+    }
+    println("$name Time: $time ms")
+
+    if (result == null) {
+        println("$name: No solution found.")
     } else {
-        printSolution(goalNode!!)
+        printSolution(result!!)
     }
 }
+
+
 

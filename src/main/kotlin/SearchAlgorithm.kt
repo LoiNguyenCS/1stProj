@@ -68,6 +68,24 @@ fun makeAStarQueue(heuristic: (SlidingPuzzle) -> Int): (
     }
 }
 
+/**
+ * A queuing function for Uniform Cost Search.
+ *
+ * This function merges the frontier and children, prioritizing nodes by cost (g(n)).
+ *
+ * @param queue the current priority queue (frontier)
+ * @param children the list of expanded nodes
+ * @return a new priority queue containing both old and new nodes
+ */
+fun uniformCostQueue(
+    queue: PriorityQueue<Node>,
+    children: List<Node>
+): PriorityQueue<Node> =
+    PriorityQueue(compareBy<Node> { it.cost }).apply {
+        addAll(queue)
+        addAll(children)
+    }
+
 fun printSolution(goalNode: Node) {
     println("Solution found in ${goalNode.depth} steps.")
     val path = mutableListOf<Node>()
