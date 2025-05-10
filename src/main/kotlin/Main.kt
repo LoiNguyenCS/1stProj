@@ -11,15 +11,22 @@ fun main() {
     println("Initial puzzle:")
     puzzle.print()
 
-    val heuristicForMahattan = { p: SlidingPuzzle -> p.manhattan() }
-    val heuristicForMisplaced = { p: SlidingPuzzle -> p.misplaced() }
-
     runSearch("A* Search (Manhattan)") {
-        search(puzzle, makeAStarQueue(heuristicForMahattan))
+        search(
+            puzzle,
+            makeAStarQueue {
+                p: SlidingPuzzle -> p.manhattan()
+            }
+        )
     }
 
     runSearch("A* Search (Misplaced Tiles)") {
-        search(puzzle, makeAStarQueue(heuristicForMisplaced))
+        search(
+            puzzle,
+            makeAStarQueue {
+                    p: SlidingPuzzle -> p.misplaced()
+            }
+        )
     }
 
     runSearch("Uniform Cost Search") {
